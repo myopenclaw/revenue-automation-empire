@@ -1,0 +1,44 @@
+# 🔐 Stripe Configuration
+
+## API Keys (LIVE MODE - BE CAREFUL!)
+PUBLISHABLE_KEY=pk_live_51T1VQ3PTbwzVNBcUFMh9DkPBIpV1giuRNQ8zsG5ordtW5mf4xE8aJufgDlJI5oJkOJZqhmPbkpBfxYUEkLbq7isw007BqMLm9N
+SECRET_KEY=[ASK_USER_FOR_SECRET_KEY]
+WEBHOOK_SECRET=[ASK_USER_FOR_WEBHOOK_SECRET]
+
+## Store Configuration
+BUSINESS_NAME="Revenue Automation Empire"
+CURRENCY="EUR"
+DEFAULT_COUNTRY="NL"
+
+## Product Catalog
+### Silver E-commerce Products
+PRODUCT_SILVER_BRACELET=price_xxx
+PRODUCT_SILVER_NECKLACE=price_xxx
+PRODUCT_SILVER_RING=price_xxx
+
+### Subscription Services
+SUBSCRIPTION_TRADING_SIGNALS=price_xxx  # €99/month
+SUBSCRIPTION_AI_TOOLKIT=price_xxx       # €49/month
+SUBSCRIPTION_VIDEO_AGENCY=price_xxx     # €199/month
+
+## Webhook Configuration
+WEBHOOK_ENDPOINT="https://your-domain.com/webhooks/stripe"
+WEBHOOK_EVENTS="checkout.session.completed, invoice.paid, customer.subscription.updated"
+
+## Payout Settings
+PAYOUT_SCHEDULE="manual"  # daily, weekly, monthly
+PAYOUT_MINIMUM=100        # €100 minimum balance
+BANK_COUNTRY="NL"
+BANK_CURRENCY="EUR"
+
+## Tax Configuration
+TAX_RATE_NL=21%  # Dutch VAT
+TAX_RATE_EU=0%   # 0% for EU B2B
+TAX_RATE_WORLD=0% # 0% for non-EU
+
+## Security Notes
+# 1. NEVER commit secret keys to GitHub
+# 2. Use environment variables in production
+# 3. Rotate keys quarterly
+# 4. Enable IP whitelisting in Stripe dashboard
+# 5. Set up alerts for suspicious activity
