@@ -1,0 +1,10 @@
+{
+  "type": "simulated_audio",
+  "voice": "Bella",
+  "text_preview": "Silver prices are rising today, currently trading at $25.50 per ounce. This represents a 2.3% increase over the past 24 hours.",
+  "text_length": 126,
+  "estimated_duration": 9,
+  "instructions": "Replace with real ElevenLabs API call",
+  "api_endpoint": "POST https://api.elevenlabs.io/v1/text-to-speech/{voice_id}",
+  "timestamp": "2026-02-16T08:50:47.001Z"
+}

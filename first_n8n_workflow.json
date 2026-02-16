@@ -1,0 +1,150 @@
+{
+  "name": "YouTube Video Pipeline",
+  "nodes": [
+    {
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "position": [250, 300],
+      "parameters": {}
+    },
+    {
+      "name": "Generate Script",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [450, 300],
+      "parameters": {
+        "method": "POST",
+        "url": "http://localhost:11434/api/generate",
+        "authentication": "none",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": {
+          "model": "llama3.2",
+          "prompt": "Create a 300-word script for a YouTube video about {topic}. Include engaging intro, 3 main points, and call to action.",
+          "stream": false
+        },
+        "options": {
+          "timeout": 30000
+        }
+      }
+    },
+    {
+      "name": "Create Voiceover",
+      "type": "n8n-nodes-base.executeCommand",
+      "position": [650, 300],
+      "parameters": {
+        "command": "echo \"{{$json.response}}\" | /Users/clarenceetnel/.local/pipx/venvs/piper-tts/bin/piper --model /Users/clarenceetnel/.local/share/piper/models/en_US-lessac-medium.onnx --output_file /tmp/voiceover_{{Date.now()}}.wav",
+        "doNotAddError": false
+      }
+    },
+    {
+      "name": "Generate Thumbnail",
+      "type": "n8n-nodes-base.code",
+      "position": [850, 300],
+      "parameters": {
+        "jsCode": "const { createCanvas } = require('canvas');\nconst fs = require('fs');\nconst path = require('path');\n\n// Create thumbnail\nconst canvas = createCanvas(1280, 720);\nconst ctx = canvas.getContext('2d');\n\n// Background gradient\nconst gradient = ctx.createLinearGradient(0, 0, 1280, 720);\ngradient.addColorStop(0, '#4CAF50');\ngradient.addColorStop(1, '#2196F3');\nctx.fillStyle = gradient;\nctx.fillRect(0, 0, 1280, 720);\n\n// Title\nctx.fillStyle = '#FFFFFF';\nctx.font = 'bold 60px Arial';\nctx.textAlign = 'center';\nctx.fillText('YouTube Video Title', 640, 200);\n\n// Emoji\nctx.font = '80px Arial';\nctx.fillText('🎬', 640, 360);\n\n// Channel name\nctx.font = 'bold 40px Arial';\nctx.fillText('Your Channel Name', 640, 500);\n\n// Save\nconst thumbnailPath = path.join('/tmp', `thumbnail_${Date.now()}.png`);\nfs.writeFileSync(thumbnailPath, canvas.toBuffer('image/png'));\n\nreturn [{ json: { thumbnailPath } }];"
+      }
+    },
+    {
+      "name": "Assemble Video",
+      "type": "n8n-nodes-base.executeCommand",
+      "position": [1050, 300],
+      "parameters": {
+        "command": "ffmpeg -loop 1 -i \"{{$json.thumbnailPath}}\" -i \"/tmp/voiceover_{{Date.now()}}.wav\" -c:v libx264 -c:a aac -t 60 -pix_fmt yuv420p -vf \"scale=1280:720\" -shortest \"/tmp/video_{{Date.now()}}.mp4\" 2>/dev/null || echo 'Video assembly failed'",
+        "doNotAddError": false
+      }
+    },
+    {
+      "name": "Log Result",
+      "type": "n8n-nodes-base.set",
+      "position": [1250, 300],
+      "parameters": {
+        "assignments": {
+          "values": [
+            {
+              "name": "videoPath",
+              "value": "=/tmp/video_{{Date.now()}}.mp4"
+            },
+            {
+              "name": "thumbnailPath",
+              "value": "={{$json.thumbnailPath}}"
+            },
+            {
+              "name": "script",
+              "value": "={{$node[\"Generate Script\"].json.response}}"
+            },
+            {
+              "name": "status",
+              "value": "completed"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Start": {
+      "main": [
+        [
+          {
+            "node": "Generate Script",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Script": {
+      "main": [
+        [
+          {
+            "node": "Create Voiceover",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Voiceover": {
+      "main": [
+        [
+          {
+            "node": "Generate Thumbnail",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Thumbnail": {
+      "main": [
+        [
+          {
+            "node": "Assemble Video",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Assemble Video": {
+      "main": [
+        [
+          {
+            "node": "Log Result",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "pinData": {},
+  "versionId": "1",
+  "triggerCount": 0,
+  "tags": [],
+  "active": true
+}

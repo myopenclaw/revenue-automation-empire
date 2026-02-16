@@ -1,0 +1,37 @@
+{
+  "networks": {
+    "mainnet": {
+      "rpc": "https://api.mainnet-beta.solana.com",
+      "ws": "wss://api.mainnet-beta.solana.com",
+      "chainId": 101
+    },
+    "testnet": {
+      "rpc": "https://api.testnet.solana.com",
+      "ws": "wss://api.testnet.solana.com",
+      "chainId": 102
+    },
+    "devnet": {
+      "rpc": "https://api.devnet.solana.com",
+      "ws": "wss://api.devnet.solana.com",
+      "chainId": 103
+    }
+  },
+  "dexes": {
+    "raydium": "https://raydium.io",
+    "orca": "https://www.orca.so",
+    "jupiter": "https://jup.ag"
+  },
+  "trading": {
+    "maxTradeSizeUSD": 50,
+    "minLiquidityUSD": 50000,
+    "stopLossPct": 10,
+    "takeProfitPct": 20,
+    "maxPositions": 2,
+    "dailyTradeLimit": 5
+  },
+  "monitoring": {
+    "newListingCheckInterval": 30000,
+    "priceUpdateInterval": 10000,
+    "positionCheckInterval": 15000
+  }
+}

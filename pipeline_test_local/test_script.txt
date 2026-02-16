@@ -1,0 +1,13 @@
+Welcome to our test video!
+
+This is a test of our complete local AI pipeline.
+
+We're using:
+• Ollama for script generation
+• Piper TTS for voiceover
+• Canvas for graphics
+• FFmpeg for video assembly
+
+All running locally with €0 monthly costs!
+
+Thanks for watching!

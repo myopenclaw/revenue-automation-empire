@@ -1,0 +1,10 @@
+{
+  "type": "simulated_audio",
+  "voice": "Rachel",
+  "text_preview": "📚 Silver Investment Guide 2026\n\n🎯 Why Silver in 2026:\n• Inflation hedge as fiat currencies devalue\n• Industrial demand growing exponentially\n• Limited supply with increasing demand\n\n💰 Investment Me...",
+  "text_length": 505,
+  "estimated_duration": 34,
+  "instructions": "Replace with real ElevenLabs API call",
+  "api_endpoint": "POST https://api.elevenlabs.io/v1/text-to-speech/{voice_id}",
+  "timestamp": "2026-02-16T08:50:56.615Z"
+}

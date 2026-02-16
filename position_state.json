@@ -1,0 +1,104 @@
+{
+  "SOLUSDT_1771228416893": {
+    "id": "SOLUSDT_1771228416893",
+    "symbol": "SOLUSDT",
+    "entry_price": 85,
+    "entry_qty": 0.5,
+    "remaining_qty": 0.5,
+    "entry_time": "2026-02-16T07:53:36.893Z",
+    "status": "open",
+    "tp_orders": [
+      {
+        "orderId": "C02__651988655266656256033",
+        "pct_gain": 8,
+        "sell_pct": 25,
+        "qty": 0.125,
+        "target_price": 91.80000000000001,
+        "status": "open"
+      },
+      {
+        "orderId": "C02__651988658940846080033",
+        "pct_gain": 15,
+        "sell_pct": 25,
+        "qty": 0.125,
+        "target_price": 97.74999999999999,
+        "status": "open"
+      },
+      {
+        "orderId": "C02__651988662518599680033",
+        "pct_gain": 25,
+        "sell_pct": 50,
+        "qty": 0.25,
+        "target_price": 106.25,
+        "status": "open"
+      }
+    ],
+    "stop_armed": true,
+    "last_check": "2026-02-16T07:55:51.934Z",
+    "pnl_pct": 0.2235294117647032
+  },
+  "SOLUSDT_1771228435454": {
+    "id": "SOLUSDT_1771228435454",
+    "symbol": "SOLUSDT",
+    "entry_price": 85,
+    "entry_qty": 0.5,
+    "remaining_qty": 0.5,
+    "entry_time": "2026-02-16T07:53:55.454Z",
+    "status": "open",
+    "tp_orders": [
+      {
+        "orderId": "C02__651988670806552576033",
+        "pct_gain": 8,
+        "sell_pct": 25,
+        "qty": 0.125,
+        "target_price": 91.80000000000001,
+        "status": "open"
+      },
+      {
+        "orderId": "C02__651988674413637632033",
+        "pct_gain": 15,
+        "sell_pct": 25,
+        "qty": 0.125,
+        "target_price": 97.74999999999999,
+        "status": "open"
+      },
+      {
+        "orderId": "C02__651988678167539713033",
+        "pct_gain": 25,
+        "sell_pct": 50,
+        "qty": 0.25,
+        "target_price": 106.25,
+        "status": "open"
+      }
+    ],
+    "stop_armed": true,
+    "last_check": "2026-02-16T07:55:54.189Z",
+    "pnl_pct": 0.2235294117647032
+  },
+  "SOLUSDT_1771228543340": {
+    "id": "SOLUSDT_1771228543340",
+    "symbol": "SOLUSDT",
+    "entry_price": 85,
+    "entry_qty": 0.5,
+    "remaining_qty": 0.5,
+    "entry_time": "2026-02-16T07:55:43.340Z",
+    "status": "open",
+    "tp_orders": [],
+    "stop_armed": true,
+    "last_check": "2026-02-16T07:55:56.454Z",
+    "pnl_pct": 0.2235294117647032
+  },
+  "SOLUSDT_1771229785935": {
+    "id": "SOLUSDT_1771229785935",
+    "symbol": "SOLUSDT",
+    "entry_price": 85,
+    "entry_qty": 0.5,
+    "remaining_qty": 0.5,
+    "entry_time": "2026-02-16T08:16:25.935Z",
+    "status": "open",
+    "tp_orders": [],
+    "stop_armed": true,
+    "last_check": null,
+    "pnl_pct": 0
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "type": "simulated_audio",
+  "voice": "Bella",
+  "text_preview": "🎯 Silver Price Update Today\n\n💰 Current Price: $25.16 USD/oz\n📈 24h Change: -0.86%%\n📊 7d Change: -2.86%%\n\n💡 Key Insight:\nIndustrial demand from solar panels rising 15% YoY\n\n🚀 What to Watch:\n- CPI ...",
+  "text_length": 368,
+  "estimated_duration": 25,
+  "instructions": "Replace with real ElevenLabs API call",
+  "api_endpoint": "POST https://api.elevenlabs.io/v1/text-to-speech/{voice_id}",
+  "timestamp": "2026-02-16T08:50:56.614Z"
+}

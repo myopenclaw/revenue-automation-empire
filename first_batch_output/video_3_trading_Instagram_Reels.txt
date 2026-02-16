@@ -1,0 +1,22 @@
+💡 Pro Trading Strategy Tip
+
+📊 Strategy: Moving Average Crossover
+⏰ Timeframe: Daily
+🎯 Success Rate: 67%
+
+🔧 How It Works:
+1. Take partial profits at 1:1 risk/reward
+2. Wait for confirmation candle/volume
+3. Wait for confirmation candle/volume
+
+📈 Example Trade:
+Entry: $155.98
+Stop Loss: -5%
+Take Profit: +20%
+RR Ratio: 1:4
+
+💡 Pro Tip:
+Volume confirms price action
+
+⚠️ Risk max 2% per trade!
+#Trading #Stocks #Strategy

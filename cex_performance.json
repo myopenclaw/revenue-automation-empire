@@ -1,0 +1,65 @@
+{
+  "daily": {
+    "2026-02-16": {
+      "date": "2026-02-16",
+      "trades": [
+        {
+          "id": "C02__651994059895783425033",
+          "symbol": "SOL/USDT",
+          "side": "buy",
+          "type": "market",
+          "amount": 5,
+          "price": 85.11,
+          "baseAmount": 0.05874750323111268,
+          "timestamp": "2026-02-16T08:15:33.343Z",
+          "status": "executed",
+          "pnl": 0,
+          "isWin": null
+        },
+        {
+          "id": "C02__651994680258510849033",
+          "symbol": "SOL/USDT",
+          "side": "buy",
+          "type": "market",
+          "amount": 5,
+          "price": 85.2,
+          "baseAmount": 0.05868544600938967,
+          "timestamp": "2026-02-16T08:18:01.284Z",
+          "status": "executed",
+          "pnl": 0,
+          "isWin": null
+        },
+        {
+          "id": "C02__651994878380650498033",
+          "symbol": "AVAX/USDT",
+          "side": "buy",
+          "type": "market",
+          "amount": 5,
+          "price": 9.28,
+          "baseAmount": 0.5387931034482759,
+          "timestamp": "2026-02-16T08:18:48.492Z",
+          "status": "executed",
+          "pnl": 5,
+          "isWin": true
+        }
+      ],
+      "pnl": 5,
+      "winRate": 33.33333333333333,
+      "tradesCount": 3,
+      "winningTrades": 1,
+      "losingTrades": 0,
+      "dailyTarget": 3,
+      "dailyLossLimit": -5,
+      "status": "active"
+    }
+  },
+  "weekly": {},
+  "monthly": {},
+  "allTime": {
+    "totalTrades": 3,
+    "winningTrades": 1,
+    "losingTrades": 0,
+    "totalPnl": 5,
+    "winRate": 33.33333333333333
+  }
+}

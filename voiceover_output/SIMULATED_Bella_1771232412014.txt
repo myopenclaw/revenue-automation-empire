@@ -1,0 +1,10 @@
+{
+  "type": "simulated_audio",
+  "voice": "Bella",
+  "text_preview": "Testing ElevenLabs integration with real API key. Silver prices are rising today.",
+  "text_length": 81,
+  "estimated_duration": 6,
+  "instructions": "Replace with real ElevenLabs API call",
+  "api_endpoint": "POST https://api.elevenlabs.io/v1/text-to-speech/{voice_id}",
+  "timestamp": "2026-02-16T09:00:12.014Z"
+}

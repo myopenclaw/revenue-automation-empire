@@ -1,0 +1,43 @@
+{
+  "batch_id": "batch_1771231847001",
+  "generated": "2026-02-16T08:50:47.002Z",
+  "total_scripts": 3,
+  "results": [
+    {
+      "script_id": "test_1",
+      "niche": "silver",
+      "topic": "Silver price update",
+      "success": false,
+      "simulated": true,
+      "filepath": "/Users/clarenceetnel/.openclaw/workspace/voiceover_output/SIMULATED_Bella_1771231847001.txt",
+      "filename": "SIMULATED_Bella_1771231847001.txt",
+      "voice": "Bella",
+      "duration": 9,
+      "instructions": "Set ELEVENLABS_API_KEY environment variable for real audio"
+    },
+    {
+      "script_id": "test_2",
+      "niche": "crypto",
+      "topic": "Bitcoin analysis",
+      "success": false,
+      "simulated": true,
+      "filepath": "/Users/clarenceetnel/.openclaw/workspace/voiceover_output/SIMULATED_Antoni_1771231847002.txt",
+      "filename": "SIMULATED_Antoni_1771231847002.txt",
+      "voice": "Antoni",
+      "duration": 8,
+      "instructions": "Set ELEVENLABS_API_KEY environment variable for real audio"
+    },
+    {
+      "script_id": "test_3",
+      "niche": "trading",
+      "topic": "Trading tip",
+      "success": false,
+      "simulated": true,
+      "filepath": "/Users/clarenceetnel/.openclaw/workspace/voiceover_output/SIMULATED_Domi_1771231847002.txt",
+      "filename": "SIMULATED_Domi_1771231847002.txt",
+      "voice": "Domi",
+      "duration": 7,
+      "instructions": "Set ELEVENLABS_API_KEY environment variable for real audio"
+    }
+  ]
+}

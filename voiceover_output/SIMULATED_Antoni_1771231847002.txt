@@ -1,0 +1,10 @@
+{
+  "type": "simulated_audio",
+  "voice": "Antoni",
+  "text_preview": "Bitcoin has broken through the $70,000 resistance level. The next target is $75,000 based on current momentum.",
+  "text_length": 110,
+  "estimated_duration": 8,
+  "instructions": "Replace with real ElevenLabs API call",
+  "api_endpoint": "POST https://api.elevenlabs.io/v1/text-to-speech/{voice_id}",
+  "timestamp": "2026-02-16T08:50:47.002Z"
+}

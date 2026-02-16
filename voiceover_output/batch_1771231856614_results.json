@@ -1,0 +1,67 @@
+{
+  "batch_id": "batch_1771231856614",
+  "generated": "2026-02-16T08:50:56.616Z",
+  "total_scripts": 5,
+  "results": [
+    {
+      "script_id": "video_1_silver_TikTok",
+      "niche": "silver",
+      "topic": "video 1 silver TikTok",
+      "success": false,
+      "simulated": true,
+      "filepath": "/Users/clarenceetnel/.openclaw/workspace/voiceover_output/SIMULATED_Bella_1771231856614.txt",
+      "filename": "SIMULATED_Bella_1771231856614.txt",
+      "voice": "Bella",
+      "duration": 25,
+      "instructions": "Set ELEVENLABS_API_KEY environment variable for real audio"
+    },
+    {
+      "script_id": "video_2_crypto_YouTube_Shorts",
+      "niche": "crypto_YouTube",
+      "topic": "video 2 crypto YouTube Shorts",
+      "success": false,
+      "simulated": true,
+      "filepath": "/Users/clarenceetnel/.openclaw/workspace/voiceover_output/SIMULATED_Rachel_1771231856615.txt",
+      "filename": "SIMULATED_Rachel_1771231856615.txt",
+      "voice": "Rachel",
+      "duration": 25,
+      "instructions": "Set ELEVENLABS_API_KEY environment variable for real audio"
+    },
+    {
+      "script_id": "video_3_trading_Instagram_Reels",
+      "niche": "trading_Instagram",
+      "topic": "video 3 trading Instagram Reels",
+      "success": false,
+      "simulated": true,
+      "filepath": "/Users/clarenceetnel/.openclaw/workspace/voiceover_output/SIMULATED_Rachel_1771231856615.txt",
+      "filename": "SIMULATED_Rachel_1771231856615.txt",
+      "voice": "Rachel",
+      "duration": 29,
+      "instructions": "Set ELEVENLABS_API_KEY environment variable for real audio"
+    },
+    {
+      "script_id": "video_4_crypto_TikTok",
+      "niche": "crypto",
+      "topic": "video 4 crypto TikTok",
+      "success": false,
+      "simulated": true,
+      "filepath": "/Users/clarenceetnel/.openclaw/workspace/voiceover_output/SIMULATED_Antoni_1771231856615.txt",
+      "filename": "SIMULATED_Antoni_1771231856615.txt",
+      "voice": "Antoni",
+      "duration": 26,
+      "instructions": "Set ELEVENLABS_API_KEY environment variable for real audio"
+    },
+    {
+      "script_id": "video_5_silver_YouTube_Shorts",
+      "niche": "silver_YouTube",
+      "topic": "video 5 silver YouTube Shorts",
+      "success": false,
+      "simulated": true,
+      "filepath": "/Users/clarenceetnel/.openclaw/workspace/voiceover_output/SIMULATED_Rachel_1771231856615.txt",
+      "filename": "SIMULATED_Rachel_1771231856615.txt",
+      "voice": "Rachel",
+      "duration": 34,
+      "instructions": "Set ELEVENLABS_API_KEY environment variable for real audio"
+    }
+  ]
+}

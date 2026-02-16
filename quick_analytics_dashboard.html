@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📊 Social Media Analytics Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { background: #f8f9fa; font-family: 'Segoe UI', system-ui, sans-serif; }
+        .dashboard-header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 2rem; border-radius: 10px; margin-bottom: 2rem; }
+        .metric-card { background: white; border-radius: 10px; padding: 1.5rem; margin-bottom: 1rem; box-shadow: 0 2px 10px rgba(0,0,0,0.1); transition: transform 0.2s; }
+        .metric-card:hover { transform: translateY(-2px); }
+        .metric-value { font-size: 2rem; font-weight: bold; color: #333; }
+        .metric-label { color: #666; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; }
+        .platform-badge { display: inline-block; padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.8rem; font-weight: 600; margin-right: 0.5rem; }
+        .youtube-badge { background: #ff0000; color: white; }
+        .tiktok-badge { background: #000000; color: white; }
+        .xcom-badge { background: #000000; color: white; }
+        .instagram-badge { background: linear-gradient(45deg, #405de6, #5851db, #833ab4, #c13584, #e1306c, #fd1d1d); color: white; }
+        .channel-card { background: white; border-radius: 10px; padding: 1rem; margin-bottom: 1rem; }
+        .progress { height: 10px; margin-top: 0.5rem; }
+        .alert-card { background: white; border-left: 4px solid; border-radius: 5px; padding: 1rem; margin-bottom: 1rem; }
+        .alert-warning { border-color: #ffc107; }
+        .alert-success { border-color: #28a745; }
+        .alert-info { border-color: #17a2b8; }
+        .revenue-metric { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; }
+        .growth-metric { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); color: white; }
+        .engagement-metric { background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); color: white; }
+    </style>
+</head>
+<body>
+    <div class="container-fluid py-4">
+        <!-- Header -->
+        <div class="dashboard-header">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h1>📊 Social Media Analytics Dashboard</h1>
+                    <p class="mb-0">Real-time tracking for 10 social media accounts • €0/month cost • Updated: <span id="update-time">Just now</span></p>
+                </div>
+                <div class="col-md-4 text-end">
+                    <div class="btn-group">
+                        <button class="btn btn-light" onclick="refreshData()">🔄 Refresh</button>
+                        <button class="btn btn-light" onclick="exportData()">📥 Export</button>
+                        <button class="btn btn-light" onclick="showSettings()">⚙️ Settings</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Stats -->
+        <div class="row mb-4">
+            <div class="col-md-3">
+                <div class="metric-card revenue-metric">
+                    <div class="metric-label">Total Revenue</div>
+                    <div class="metric-value">€<span id="total-revenue">0</span></div>
+                    <small>Month to date • Projected: €<span id="projected-revenue">1,300</span></small>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="metric-card growth-metric">
+                    <div class="metric-label">Total Followers</div>
+                    <div class="metric-value"><span id="total-followers">0</span></div>
+                    <small>Across all platforms • +<span id="daily-growth">0</span> today</small>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="metric-card engagement-metric">
+                    <div class="metric-label">Avg Engagement</div>
+                    <div class="metric-value"><span id="avg-engagement">0</span>%</div>
+                    <small>Likes + Comments / Followers</small>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="metric-card">
+                    <div class="metric-label">Content Produced</div>
+                    <div class="metric-value"><span id="content-produced">0</span></div>
+                    <small>This week • Cost: €<span id="content-cost">0</span></small>
+                </div>
+            </div>
+        </div>
+
+        <!-- Charts -->
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <div class="metric-card">
+                    <h5>📈 Follower Growth by Platform</h5>
+                    <canvas id="growthChart" height="200"></canvas>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="metric-card">
+                    <h5>💰 Revenue by Channel</h5>
+                    <canvas id="revenueChart" height="200"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Platform Performance -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="metric-card">
+                    <h5>🏆 Platform Performance</h5>
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Platform</th>
+                                    <th>Accounts</th>
+                                    <th>Followers</th>
+                                    <th>Engagement</th>
+                                    <th>Growth</th>
+                                    <th>Revenue</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="platform-table">
+                                <!-- Filled by JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Channel Performance -->
+        <div class="row">
+            <div class="col-md-8">
+                <div class="metric-card">
+                    <h5>🎬 Channel Performance</h5>
+                    <div id="channel-performance">
+                        <!-- Filled by JavaScript -->
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="metric-card">
+                    <h5>🚨 Alerts & Notifications</h5>
+                    <div id="alerts-container">
+                        <div class="alert-card alert-info">
+                            <strong>🔄 System Starting</strong>
+                            <p>Analytics dashboard initializing. Data will populate shortly.</p>
+                            <small>Just now</small>
+                        </div>
+                        <div class="alert-card alert-success">
+                            <strong>✅ Content Ready</strong>
+                            <p>First batch content generated for 8 channels.</p>
+                            <small>2 minutes ago</small>
+                        </div>
+                        <div class="alert-card alert-warning">
+                            <strong>⚠️ n8n Starting</strong>
+                            <p>Automation system migrations in progress.</p>
+                            <small>5 minutes ago</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="row mt-4">
+            <div class="col-12 text-center text-muted">
+                <small>📊 Social Media Analytics Dashboard • Built with our €0/month AI toolchain • Updated automatically</small>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Sample data (will be replaced with real API calls)
+        const sampleData = {
+            platforms: [
+                { name: 'YouTube', accounts: 8, followers: 0, engagement: 0, growth: 0, revenue: 0, status: '🟡 Starting' },
+                { name: 'TikTok', accounts: 4, followers: 0, engagement: 0, growth: 0, revenue: 0, status: '🟡 Starting' },
+                { name: 'X.com', accounts: 4, followers: 0, engagement: 0, growth: 0, revenue: 0, status: '🟡 Starting' },
+                { name: 'Instagram', accounts: 2, followers: 0, engagement: 0, growth: 0, revenue: 0, status: '🟡 Starting' }
+            ],
+            channels: [
+                { name: 'Junior Science Lab', platform: 'YouTube', followers: 0, growth: 0, revenue: 0, target: 1000 },
+                { name: 'Kid Entrepreneur Club', platform: 'YouTube', followers: 0, growth: 0, revenue: 0, target: 1000 },
+                { name: 'AI Automation Lab', platform: 'YouTube', followers: 0, growth: 0, revenue: 0, target: 5000 },
+                { name: 'Algorithmic Trading Hub', platform: 'YouTube', followers: 0, growth: 0, revenue: 0, target: 5000 }
+            ],
+            metrics: {
+                totalRevenue: 0,
+                projectedRevenue: 1300,
+                totalFollowers: 0,
+                dailyGrowth: 0,
+                avgEngagement: 0,
+                contentProduced: 16,
+                contentCost: 0
+            }
+        };
+
+        // Initialize charts
+        let growthChart, revenueChart;
+
+        function initCharts() {
+            const growthCtx = document.getElementById('growthChart').getContext('2d');
+            growthChart = new Chart(growthCtx, {
+                type: 'line',
+                data: {
+                    labels: ['Day 1', 'Day 2', 'Day 3', 'Day 4', 'Day 5', 'Day 6', 'Day 7'],
+                    datasets: [
+                        {
+                            label: 'YouTube',
+                            data: [0, 0, 0, 0, 0, 0, 0],
+                            borderColor: '#ff0000',
+                            backgroundColor: 'rgba(255, 0, 0, 0.1)',
+                            tension: 0.4
+                        },
+                        {
+                            label: 'TikTok',
+                            data: [0, 0, 0, 0, 0, 0, 0],
+                            borderColor: '#000000',
+                            backgroundColor: 'rgba(0, 0, 0, 0.1)',
+                            tension: 0.4
+                        },
+                        {
+                            label: 'X.com',
+                            data: [0, 0, 0, 0, 0, 0, 0],
+                            borderColor: '#1da1f2',
+                            backgroundColor: 'rgba(29, 161, 242, 0.1)',
+                            tension: 0.4
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { position: 'top' }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Followers'
+                            }
+                        }
+                    }
+                }
+            });
+
+            const revenueCtx = document.getElementById('revenueChart').getContext('2d');
+            revenueChart = new Chart(revenueCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Science Lab', 'Entrepreneur', 'AI Lab', 'Trading Hub', 'NFT Studio', 'Local AI'],
+                    datasets: [{
+                        label: 'Projected Revenue (Month 3)',
+                        data: [500, 300, 800, 600, 400, 300],
+                        backgroundColor: [
+                            'rgba(76, 175, 80, 0.7)',
+                            'rgba(255, 152, 0, 0.7)',
+                            'rgba(156, 39, 176, 0.7)',
+                            'rgba(76, 175, 80, 0.7)',
+                            'rgba(255, 152, 0, 0.7)',
+                            'rgba(33, 150, 243, 0.7)'
+                        ],
+                        borderColor: [
+                            'rgb(76, 175, 80)',
+                            'rgb(255, 152, 0)',
+                            'rgb(156, 39, 176)',
+                            'rgb(76, 175, 80)',
+                            'rgb(255, 152, 0)',
+                            'rgb(33, 150, 243)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Revenue (€)'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function updateDashboard() {
+            // Update metrics
+            document.getElementById('total-revenue').textContent = sampleData.metrics.totalRevenue.toLocaleString();
+            document.getElementById('projected-revenue').textContent = sampleData.metrics.projectedRevenue.toLocaleString();
+            document.getElementById('total-followers').textContent = sampleData.metrics.totalFollowers.toLocaleString();
+            document.getElementById('daily-growth').textContent = sampleData.metrics.dailyGrowth;
+            document.getElementById('avg-engagement').textContent = sampleData.metrics.avgEngagement;
+            document.getElementById('content-produced').textContent = sampleData.metrics.contentProduced;
+            document.getElementById('content-cost').textContent = sampleData.metrics.contentCost;
+            
+            // Update platform table
+            const platformTable = document.getElementById('platform-table');
+            platformTable.innerHTML = sampleData.platforms.map(platform => `
+                <tr>
+                    <td><strong>${platform.name}</strong></td>
+                    <td>${platform.accounts}</td>
+                    <td>${platform.followers.toLocaleString()}</td>
+                    <td>${platform.engagement}%</td>
+                    <td>${platform.growth}%</td>
+                    <td>€${platform.revenue}</td>
+                    <td>${platform.status}</td>
+                </tr>
+            `).join('');
+            
+            // Update channel performance
+            const channelContainer = document.getElementById('channel-performance');
+            channelContainer.innerHTML = sampleData.channels.map(channel => `
+                <div class="channel-card">
+                    <div class="row align-items-center">
+                        <div class="col-md-4">
+                            <strong>${channel.name}</strong>
+                            <div><span class="platform-badge ${channel.platform.toLowerCase()}-badge">${channel.platform}</span></div>
+                        </div>
+                        <div class="col-md-4">
+                            <div>${channel.followers.toLocaleString()} followers</div>
+                            <div class="progress">
+                                <div class="progress-bar" style="width: ${(channel.followers / channel.target) * 100}%"></div>
+                            </div>
+                            <small>Target: ${channel.target.toLocaleString()}</small>
+                        </div>
+                        <div class="col-md-2 text-center">
+                            <div class="text-success">+${channel.growth}%</div>
+                            <small>Growth</small>
+                        </div>
+                        <div class="col-md-2 text-center">
+                            <div class="text-primary">€${channel.revenue}</div>
+                            <small>Revenue</small>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+            
+            // Update time
+            document.getElementById('update-time').textContent = new Date().toLocaleTimeString();
+        }
+
+        function refreshData() {
+            // Simulate data refresh
+            sampleData.metrics.dailyGrowth = Math.floor(Math.random() * 50);
+            sampleData.metrics.totalFollowers += sampleData.metrics.dailyGrowth;
+            sampleData.metrics.avgEngagement = (Math.random() * 5 + 1).toFixed(1);
+            
+            // Update platform data
+            sampleData.platforms.forEach(platform => {
+                platform.followers += Math.floor(Math.random() * 20);
+                platform.engagement = (Math.random() * 4 + 1).toFixed(1);
+                platform.growth = Math.floor(Math.random() * 10);
+                if (platform.followers > 50) platform.status = '🟢 Active';
+            });
+            
+            // Update channel data
+            sampleData.channels.forEach(channel => {
+                channel.followers += Math.floor(Math.random() * 10);
+                channel.growth = Math.floor(Math.random() * 15);
+                if (channel.followers > 100) channel.revenue = Math.floor(Math.random() * 50);
+            });
+            
+            updateDashboard();
+            
+            // Add refresh alert
+            const alerts = document.getElementById('alerts-container');
+            alerts.innerHTML = `
+                <div class="alert-card alert-success">
+                    <strong>✅ Data Refreshed</strong>
+                    <p>Dashboard updated with latest metrics.</p>
+                    <small>Just now

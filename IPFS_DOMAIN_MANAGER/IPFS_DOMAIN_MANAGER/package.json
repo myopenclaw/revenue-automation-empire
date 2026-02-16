@@ -1,0 +1,25 @@
+{
+  "name": "ipfs-domain-manager",
+  "version": "1.0.0",
+  "description": "Manage 1380 Unstoppable Domains with IPFS hosting and monetization",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "analyze": "node tools/domain_analyzer.js",
+    "upload": "node tools/ipfs_uploader.js",
+    "price": "node tools/price_optimizer.js",
+    "list": "node tools/marketplace_lister.js",
+    "monitor": "node tools/revenue_monitor.js"
+  },
+  "dependencies": {
+    "axios": "^1.6.0",
+    "csv-parser": "^3.0.0",
+    "dotenv": "^16.3.0",
+    "express": "^4.18.0",
+    "ipfs-http-client": "^60.0.0",
+    "web3": "^4.0.0",
+    "ethers": "^6.0.0",
+    "node-cron": "^3.0.0",
+    "chalk": "^4.1.0"
+  }
+}

@@ -1,0 +1,30 @@
+
+> ollama-api-gateway@1.0.0 start
+> node server.js
+
+✅ Ollama connected. Available models: mistral:7b, phi3:mini, codellama:7b, llama3.1:8b, qwen2.5-coder:7b, qwen2.5:7b, deepseek-coder:6.7b, llama3.2:latest
+
+🚀 OLLAMA API GATEWAY STARTED
+=============================
+📡 API Base URL: http://localhost:3000/v1
+📊 Admin Dashboard: http://localhost:3000/admin
+🔧 Health Check: http://localhost:3000/v1/health
+📚 Available Models: mistral-7b, llama3.2, qwen2.5-coder, phi3-mini, deepseek-coder, codellama
+
+💰 COST SAVINGS:
+• OpenAI Equivalent: €0.03 per 1K tokens
+• Our Cost: €0.000001 per 1K tokens
+• Savings: 99.997% (€1,199.70/month for 50 agents)
+
+🔒 DATA PRIVACY: 100% local - no data leaves your computer
+⚡ RATE LIMITS: None (your hardware, your rules)
+
+📋 Quick Test:
+$ curl http://localhost:3000/v1/chat/completions \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer empire_sk_test_123" \
+  -d '{"model": "mistral-7b", "messages": [{"role": "user", "content": "Hello!"}]}'
+
+🎯 Replace OpenAI API calls with our endpoint to start saving!
+    
+📨 chatcmpl-1771198431782-1tpeb41a3 | Model: mistral-7b | Tokens: 24 | Latency: 6061ms

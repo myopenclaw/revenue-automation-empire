@@ -1,0 +1,82 @@
+{
+  "generated": "2026-02-16T08:45:42.639Z",
+  "total_videos": 5,
+  "total_characters": 2039,
+  "niches": [
+    "silver",
+    "crypto",
+    "trading"
+  ],
+  "platforms": [
+    "TikTok",
+    "YouTube Shorts",
+    "Instagram Reels"
+  ],
+  "videos": [
+    {
+      "id": 1,
+      "niche": "silver",
+      "topic": "Silver Price Update Today",
+      "platform": "TikTok",
+      "filename": "video_1_silver_TikTok.txt",
+      "duration": 30,
+      "hashtags": [
+        "Silver",
+        "Commodities",
+        "PreciousMetals"
+      ]
+    },
+    {
+      "id": 2,
+      "niche": "crypto",
+      "topic": "Bitcoin Market Analysis",
+      "platform": "YouTube Shorts",
+      "filename": "video_2_crypto_YouTube_Shorts.txt",
+      "duration": 45,
+      "hashtags": [
+        "Altcoins",
+        "Blockchain",
+        "Web3"
+      ]
+    },
+    {
+      "id": 3,
+      "niche": "trading",
+      "topic": "Pro Trading Strategy Tip",
+      "platform": "Instagram Reels",
+      "filename": "video_3_trading_Instagram_Reels.txt",
+      "duration": 25,
+      "hashtags": [
+        "Trading",
+        "Stocks",
+        "Strategy"
+      ]
+    },
+    {
+      "id": 4,
+      "niche": "crypto",
+      "topic": "Solana New Listing Alert",
+      "platform": "TikTok",
+      "filename": "video_4_crypto_TikTok.txt",
+      "duration": 35,
+      "hashtags": [
+        "Altcoins",
+        "Bitcoin",
+        "Web3"
+      ]
+    },
+    {
+      "id": 5,
+      "niche": "silver",
+      "topic": "Silver Investment Guide 2026",
+      "platform": "YouTube Shorts",
+      "filename": "video_5_silver_YouTube_Shorts.txt",
+      "duration": 50,
+      "hashtags": [
+        "Silver",
+        "PreciousMetals",
+        "Gold"
+      ]
+    }
+  ]
+}

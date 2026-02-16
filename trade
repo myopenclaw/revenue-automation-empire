@@ -1,0 +1,36 @@
+#!/bin/bash
+# 🎯 CEX Trading Agent Command Wrapper
+# Usage: ./trade [coin] [amount] [TR]
+# Example: ./trade SOL 5 TR
+
+cd "$(dirname "$0")"
+
+if [ $# -eq 0 ]; then
+  # Show status
+  node cex_trading_agent.js
+elif [ "$1" = "status" ]; then
+  node cex_trading_agent.js status
+elif [ "$1" = "balance" ]; then
+  node cex_trading_agent.js balance
+elif [ "$1" = "trade" ]; then
+  # Parse trade command
+  COIN=${2:-SOL}
+  AMOUNT=${3:-5}
+  EXECUTE=${4:-""}
+  
+  if [ "$EXECUTE" = "TR" ]; then
+    echo "🚀 EXECUTING TRADE: $COIN $${AMOUNT}"
+    node cex_trading_agent.js trade "$COIN" "$AMOUNT" "TR"
+  else
+    echo "🔍 SIMULATING TRADE: $COIN $${AMOUNT}"
+    echo "   Add 'TR' to execute"
+    node cex_trading_agent.js trade "$COIN" "$AMOUNT"
+  fi
+else
+  echo "Usage:"
+  echo "  ./trade                    - Show status"
+  echo "  ./trade status             - Show status"
+  echo "  ./trade balance            - Check balance"
+  echo "  ./trade trade SOL 5        - Simulate trade"
+  echo "  ./trade trade SOL 5 TR     - Execute trade"
+fi

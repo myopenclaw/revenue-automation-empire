@@ -1,0 +1,317 @@
+{
+  "name": "Trading Signal Processor",
+  "nodes": [
+    {
+      "name": "Webhook - Signal Intake",
+      "type": "n8n-nodes-base.webhook",
+      "position": [250, 300],
+      "parameters": {
+        "path": "trading-signal",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "webhookId": "trading-signal-webhook"
+    },
+    {
+      "name": "Normalize Signal",
+      "type": "n8n-nodes-base.function",
+      "position": [450, 300],
+      "parameters": {
+        "jsCode": "// Normalize incoming signal to unified schema\nconst signal = items[0].json;\n\n// Map to standard schema\nconst normalized = {\n  signalId: signal.id || `sig_${Date.now()}_${Math.random().toString(36).substring(7)}`,\n  strategyId: signal.strategy || 'default',\n  symbol: signal.symbol.toUpperCase(),\n  side: signal.side.toLowerCase(),\n  confidence: Math.min(Math.max(signal.confidence || 0.5, 0), 1),\n  suggestedQuantity: signal.quantity,\n  suggestedEntry: signal.entry,\n  suggestedStopLoss: signal.stopLoss,\n  suggestedTakeProfit: signal.takeProfit,\n  source: signal.source || 'webhook',\n  timestamp: new Date().toISOString(),\n  rawData: signal\n};\n\n// Validate required fields\nconst required = ['symbol', 'side', 'strategyId'];\nconst missing = required.filter(field => !normalized[field]);\n\nif (missing.length > 0) {\n  throw new Error(`Missing required fields: ${missing.join(', ')}`);\n}\n\nreturn [{\n  json: normalized\n}];"
+      }
+    },
+    {
+      "name": "Risk Gate",
+      "type": "n8n-nodes-base.function",
+      "position": [650, 250],
+      "parameters": {
+        "jsCode": "// Risk checks before execution\nconst signal = items[0].json;\nconst now = new Date();\n\n// 1. Check trading hours (no trades 23:00-08:00 local time)\nconst hour = now.getHours();\nif (hour >= 23 || hour < 8) {\n  throw new Error('Outside trading hours (23:00-08:00)');\n}\n\n// 2. Check symbol whitelist\nconst whitelist = ['BTC/USDT', 'ETH/USDT', 'SOL/USDT', 'SOL/USDC'];\nif (!whitelist.includes(signal.symbol)) {\n  throw new Error(`Symbol not in whitelist: ${signal.symbol}`);\n}\n\n// 3. Check confidence threshold\nif (signal.confidence < 0.6) {\n  throw new Error(`Confidence too low: ${signal.confidence} < 0.6`);\n}\n\n// 4. Check max position size (simulated)\nconst maxPosition = 1000; // $1000 max per symbol\n// In production: check database for current positions\n\n// 5. Check daily loss limit (simulated)\nconst dailyLossLimit = -50; // -$50 daily\n// In production: check database for today's PnL\n\n// All checks passed\nreturn [{\n  json: {\n    ...signal,\n    riskCheck: 'passed',\n    checkedAt: now.toISOString()\n  }\n}];"
+      }
+    },
+    {
+      "name": "Save Signal to DB",
+      "type": "n8n-nodes-base.postgres",
+      "position": [850, 300],
+      "parameters": {
+        "operation": "insert",
+        "schema": "public",
+        "table": "signals",
+        "columns": "strategy_id,symbol,side,confidence,suggested_quantity,suggested_entry,suggested_stop_loss,suggested_take_profit,source,raw_data,created_at",
+        "additionalFields": {},
+        "returnFields": "*"
+      },
+      "credentials": {
+        "postgres": {
+          "id": "postgres-credential-id",
+          "name": "Trading Database"
+        }
+      }
+    },
+    {
+      "name": "Route to Venue",
+      "type": "n8n-nodes-base.switch",
+      "position": [1050, 300],
+      "parameters": {
+        "dataPropertyName": "json.symbol",
+        "rules": [
+          {
+            "value": "SOL/USDC",
+            "output": 1
+          },
+          {
+            "value": "SOL/USDT",
+            "output": 1
+          }
+        ],
+        "defaultOutput": 0
+      }
+    },
+    {
+      "name": "CEX Execution (MEXC)",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [1250, 200],
+      "parameters": {
+        "method": "POST",
+        "url": "={{$json.symbol.includes('USDC') ? 'https://api.mexc.com/api/v3/order' : 'https://api.mexc.com/api/v3/order'}}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "symbol",
+              "value": "={{$json.symbol.replace('/', '')}}"
+            },
+            {
+              "name": "side",
+              "value": "={{$json.side.toUpperCase()}}"
+            },
+            {
+              "name": "type",
+              "value": "MARKET"
+            },
+            {
+              "name": "quantity",
+              "value": "={{$json.suggestedQuantity || 0.01}}"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 10000
+        }
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "name": "MEXC API",
+          "data": {
+            "X-MEXC-APIKEY": "={{$credentials.mexcApiKey}}"
+          }
+        }
+      }
+    },
+    {
+      "name": "DEX Execution (Executor Service)",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [1250, 400],
+      "parameters": {
+        "method": "POST",
+        "url": "http://localhost:3001/swap",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "quoteId",
+              "value": "quote_{{Date.now()}}"
+            },
+            {
+              "name": "wallet",
+              "value": "={{$env.SOLANA_WALLET_ADDRESS}}"
+            },
+            {
+              "name": "clientOrderId",
+              "value": "={{$json.signalId}}_order"
+            }
+          ]
+        }
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "name": "Executor Service",
+          "data": {
+            "Authorization": "Bearer {{$credentials.executorApiToken}}"
+          }
+        }
+      }
+    },
+    {
+      "name": "Save Order to DB",
+      "type": "n8n-nodes-base.postgres",
+      "position": [1450, 300],
+      "parameters": {
+        "operation": "insert",
+        "schema": "public",
+        "table": "orders",
+        "columns": "signal_id,client_order_id,venue,symbol,side,quantity,order_type,status,request_json,created_at",
+        "additionalFields": {},
+        "returnFields": "*"
+      }
+    },
+    {
+      "name": "Send Telegram Alert",
+      "type": "n8n-nodes-base.telegram",
+      "position": [1650, 300],
+      "parameters": {
+        "operation": "sendMessage",
+        "text": "={{$json.side.toUpperCase()}} {{$json.symbol}} executed via {{$json.venue}}\\nQuantity: {{$json.quantity}}\\nSignal ID: {{$json.signalId}}\\nTime: {{$node['Save Signal to DB'].json.created_at}}",
+        "additionalFields": {}
+      },
+      "credentials": {
+        "telegramApi": {
+          "id": "telegram-credential-id",
+          "name": "Trading Alerts Bot"
+        }
+      }
+    },
+    {
+      "name": "Error Handler",
+      "type": "n8n-nodes-base.function",
+      "position": [1450, 500],
+      "parameters": {
+        "jsCode": "// Log error and send alert\nconst error = items[0].json.error || items[0].json.message || 'Unknown error';\nconst signal = items[0].json.signal || {};\n\nconsole.error('Trading error:', error);\n\n// Save error to risk_events table (simulated)\nconst riskEvent = {\n  type: 'error',\n  severity: 'high',\n  description: `Trade execution failed: ${error}`,\n  strategyId: signal.strategyId,\n  symbol: signal.symbol,\n  detectedAt: new Date().toISOString()\n};\n\n// In production: save to database\n\nreturn [{\n  json: {\n    ...riskEvent,\n    originalSignal: signal,\n    handled: true\n  }\n}];"
+      }
+    }
+  ],
+  "connections": {
+    "Webhook - Signal Intake": {
+      "main": [
+        [
+          {
+            "node": "Normalize Signal",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalize Signal": {
+      "main": [
+        [
+          {
+            "node": "Risk Gate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Risk Gate": {
+      "main": [
+        [
+          {
+            "node": "Save Signal to DB",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save Signal to DB": {
+      "main": [
+        [
+          {
+            "node": "Route to Venue",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Route to Venue": {
+      "main": [
+        [
+          {
+            "node": "CEX Execution (MEXC)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "DEX Execution (Executor Service)",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "CEX Execution (MEXC)": {
+      "main": [
+        [
+          {
+            "node": "Save Order to DB",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ],
+      "error": [
+        [
+          {
+            "node": "Error Handler",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "DEX Execution (Executor Service)": {
+      "main": [
+        [
+          {
+            "node": "Save Order to DB",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ],
+      "error": [
+        [
+          {
+            "node": "Error Handler",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save Order to DB": {
+      "main": [
+        [
+          {
+            "node": "Send Telegram Alert",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Error Handler": {
+      "main": [
+        [
+          {
+            "node": "Send Telegram Alert",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "pinData": {}
+}

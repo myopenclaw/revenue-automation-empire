@@ -1,0 +1,35 @@
+[
+  {
+    "id": "strategy_001",
+    "name": "Silver Momentum",
+    "params": {
+      "lookback": 14,
+      "threshold": 0.02
+    },
+    "enabled": true,
+    "created_at": "2026-02-16T11:57:00.648Z",
+    "updated_at": "2026-02-16T11:57:00.649Z"
+  },
+  {
+    "id": "strategy_002",
+    "name": "Crypto Mean Reversion",
+    "params": {
+      "period": 20,
+      "stdDev": 2
+    },
+    "enabled": true,
+    "created_at": "2026-02-16T11:57:00.649Z",
+    "updated_at": "2026-02-16T11:57:00.649Z"
+  },
+  {
+    "id": "strategy_003",
+    "name": "TradingView Alerts",
+    "params": {
+      "source": "tradingview",
+      "minConfidence": 0.7
+    },
+    "enabled": true,
+    "created_at": "2026-02-16T11:57:00.649Z",
+    "updated_at": "2026-02-16T11:57:00.649Z"
+  }
+]

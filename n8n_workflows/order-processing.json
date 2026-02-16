@@ -1,0 +1,151 @@
+{
+  "name": "Shopify Order Processing",
+  "description": "Process new Shopify orders: NFT minting + fulfillment",
+  "nodes": [
+    {
+      "name": "Shopify Trigger",
+      "type": "n8n-nodes-base.shopifyTrigger",
+      "position": [
+        250,
+        300
+      ],
+      "parameters": {
+        "event": "order/created",
+        "additionalFields": {}
+      },
+      "credentials": {
+        "shopifyApi": {
+          "id": "shopify-api-credential",
+          "name": "silverjstore API"
+        }
+      }
+    },
+    {
+      "name": "Extract Order Data",
+      "type": "n8n-nodes-base.function",
+      "position": [
+        450,
+        300
+      ],
+      "parameters": {
+        "jsCode": "// Extract relevant order data\nconst order = items[0].json;\nconst output = {\n  orderId: order.id,\n  customerEmail: order.email,\n  lineItems: order.line_items,\n  totalPrice: order.total_price,\n  shippingAddress: order.shipping_address,\n  billingAddress: order.billing_address\n};\nreturn [output];"
+      }
+    },
+    {
+      "name": "Mint NFT",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        650,
+        250
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.solana.com/mint-nft",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "metadata",
+              "value": "={{$json.lineItems[0].title}} - Silver Certificate"
+            },
+            {
+              "name": "recipient",
+              "value": "={{$json.customerEmail}}"
+            },
+            {
+              "name": "orderId",
+              "value": "={{$json.orderId}}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Update Order Tags",
+      "type": "n8n-nodes-base.shopify",
+      "position": [
+        650,
+        400
+      ],
+      "parameters": {
+        "resource": "order",
+        "operation": "update",
+        "orderId": "={{$json.orderId}}",
+        "additionalFields": {
+          "tags": "nft-minted,processing"
+        }
+      },
+      "credentials": {
+        "shopifyApi": {
+          "id": "shopify-api-credential",
+          "name": "silverjstore API"
+        }
+      }
+    },
+    {
+      "name": "Send Confirmation Email",
+      "type": "n8n-nodes-base.emailSend",
+      "position": [
+        850,
+        300
+      ],
+      "parameters": {
+        "fromEmail": "orders@silverjstore.com",
+        "toEmail": "={{$json.customerEmail}}",
+        "subject": "Your Silver Order + NFT Certificate",
+        "text": "Thank you for your order! Your NFT certificate has been minted and will be sent to your wallet shortly."
+      }
+    }
+  ],
+  "connections": {
+    "Shopify Trigger": {
+      "main": [
+        [
+          {
+            "node": "Extract Order Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Order Data": {
+      "main": [
+        [
+          {
+            "node": "Mint NFT",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Update Order Tags",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mint NFT": {
+      "main": [
+        [
+          {
+            "node": "Send Confirmation Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Order Tags": {
+      "main": [
+        [
+          {
+            "node": "Send Confirmation Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  }
+}
